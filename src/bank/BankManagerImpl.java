@@ -51,7 +51,36 @@ public class BankManagerImpl implements BankManager {
     @Override
     public void createDB() throws SQLException {
 	// TODO Auto-generated method stub
-
+        String CREATE_TABLE_ACCOUNT = "create table ACCOUNT (" + 
+	    "AID int, " +
+            "BALANCE double," +
+	    "primary key (AID)" + 
+	    ")";
+        
+        String CREATE_TABLE_OPERATION = "create table OPERATION (" + 
+	    "OID int, " + 
+            "AID int, " +
+            "AMOUNT double, " +
+            "DATE date, " +
+	    "primary key (OID)," + 
+            "foreign key(AID) REFERENCES ACCOUNT(AID) ON DELETE CASCADE,"+
+	    ")";
+        
+        String ACCOUNT_CREATION_TRIGGER = " create TRIGGER ACCOUNT_CREATION_TRIG" +
+            " BEFORE INSERT OF BALANCE ON ACCOUNT" +
+            " REFERENCING NEW ROW AS BALANCE" + 
+            " FOR EACH ROW " +
+            " WHEN (BALANCE.ACCOUNT<0)"+
+            " SET BALANCE.ACCOUNT=0"; 
+        
+        String ACCOUNT_UPDATE_TRIGGER = "create TRIGGER ACCOUNT_UPDATE_TRIG" +
+            "BEFORE UPDATE OF BALANCE ON ACCOUNT" +
+            " REFERENCING " +
+            " OLD ROW AS OLDBALANCE" +
+            " NEW ROW AS NEWBALANCE" +
+            " FOR EACH ROW" +
+            " WHEN (NEWBALANCE<0)"+
+            " SET NEWBALANCE=OLDBALANCE";
     }
 
     @Override
