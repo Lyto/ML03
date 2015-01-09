@@ -51,20 +51,24 @@ public class BankManagerImpl implements BankManager {
     @Override
     public void createDB() throws SQLException {
 	// TODO Auto-generated method stub
-        String CREATE_TABLE_ACCOUNT = "create table ACCOUNT (" + 
+        String CREATE_TABLE_ACCOUNT = "create table IF NOT EXISTS ACCOUNT (" + 
 	    "AID int, " +
             "BALANCE double," +
 	    "primary key (AID)" + 
 	    ")";
         
-        String CREATE_TABLE_OPERATION = "create table OPERATION (" + 
+        stmt.executeUpdate(CREATE_TABLE_ACCOUNT);
+        
+        String CREATE_TABLE_OPERATION = "create table IF NOT EXISTS OPERATION (" + 
 	    "OID int, " + 
             "AID int, " +
             "AMOUNT double, " +
             "DATE date, " +
 	    "primary key (OID)," + 
-            "foreign key(AID) REFERENCES ACCOUNT(AID) ON DELETE CASCADE,"+
+            "foreign key(AID) REFERENCES ACCOUNT(AID) ON DELETE CASCADE"+
 	    ")";
+        
+        //stmt.executeUpdate(CREATE_TABLE_OPERATION);
         
         String ACCOUNT_CREATION_TRIGGER = " create TRIGGER ACCOUNT_CREATION_TRIG" +
             " BEFORE INSERT OF BALANCE ON ACCOUNT" +
@@ -72,6 +76,8 @@ public class BankManagerImpl implements BankManager {
             " FOR EACH ROW " +
             " WHEN (BALANCE.ACCOUNT<0)"+
             " SET BALANCE.ACCOUNT=0"; 
+        
+        //stmt.executeUpdate(ACCOUNT_CREATION_TRIGGER);
         
         String ACCOUNT_UPDATE_TRIGGER = "create TRIGGER ACCOUNT_UPDATE_TRIG" +
             "BEFORE UPDATE OF BALANCE ON ACCOUNT" +
@@ -81,6 +87,8 @@ public class BankManagerImpl implements BankManager {
             " FOR EACH ROW" +
             " WHEN (NEWBALANCE<0)"+
             " SET NEWBALANCE=OLDBALANCE";
+        
+        //stmt.executeUpdate(ACCOUNT_UPDATE_TRIGGER);
     }
 
     @Override

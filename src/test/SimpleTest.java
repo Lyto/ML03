@@ -98,18 +98,18 @@ public class SimpleTest {
     public static void main(String[] args) {
 
 	// check parameters
-	if (args.length != 3) {
+	/*if (args.length != 3) {
 	    System.err.println("usage: SimpleTest <url> <user> <password>");
 	    System.exit(-1);
-	}
+	}*/
 
 	try {
 	    // create ReservationManager object
-	    BankManager manager = new BankManagerImpl(args[0], args[1], args[2]);
+	    BankManager manager = new BankManagerImpl(args[0], args[1], "");
 
 	    // create the database
 	    manager.createDB();
-	    
+/*	    
 	    // populate the database
 	    for (int i = 0; i < MAX_ACCOUNTS; i++) {
 		manager.createAccount(i + 1);
@@ -123,7 +123,7 @@ public class SimpleTest {
 		BankManager m = new BankManagerImpl(args[0], args[1], args[2]);
 		new CustomerEmulator(m, "multi-customer" + i).start();
 	    }
-
+*/
 	} catch (Exception e) {
 	    System.err.println("test aborted: " + e);
 	    e.printStackTrace();
