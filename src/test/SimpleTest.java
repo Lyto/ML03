@@ -7,6 +7,8 @@ import java.util.List;
 import bank.BankManager;
 import bank.BankManagerImpl;
 import bank.Operation;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The squeleton of a simple test program for {@link BankManagerImpl}.
@@ -50,16 +52,49 @@ public class SimpleTest {
 
             // Analyse the customer and test different posibilities
             switch (customer) {
-                case "customer1":
-                    // deposit 1000 on account #1
-                    double b = manager.addBalance(1, 1000.0);
-                    
+                case "multi-customer1":
+                    try {
+                        // deposit 500 on account #4
+                        double b = manager.addBalance(4, 500.0);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SimpleTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                     break;
-                case "customer2":
+                case "multi-customer2":
+                    try {
+                        // deposit 150 on account #3
+                        manager.addBalance(3, 150.0);
+                        
+                        // transfer 80 from account #3 to account #8
+                        manager.transfer(3, 8, 80.0);
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SimpleTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
-                case "customer3":
+                case "multi-customer3":
+                    try {
+                        // deposit 75 on account #1
+                        double b = manager.addBalance(1, 75.0);
+                        
+                        // transfer 62 from account #1 to account #2
+                        manager.transfer(3, 8, 62.0);
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SimpleTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
-                case "customer4":
+                case "multi-customer4":
+                    try {
+                        // deposit 1253 on account #6
+                        double b = manager.addBalance(6, 1000.0);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SimpleTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+
+                default:
                     break;
             }
 
@@ -103,7 +138,7 @@ public class SimpleTest {
         System.out.println("operations on account #2 = " + o2);
         check("getOperations-1", o2.size() == 1);
 
-	// TODO complete the test
+        // TODO complete the test
     }
 
     //
@@ -111,7 +146,7 @@ public class SimpleTest {
     //
     public static void main(String[] args) {
 
-	// check parameters
+        // check parameters
 	/*if (args.length != 3) {
          System.err.println("usage: SimpleTest <url> <user> <password>");
          System.exit(-1);
