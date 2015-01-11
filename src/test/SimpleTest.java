@@ -139,6 +139,16 @@ public class SimpleTest {
         check("getOperations-1", o2.size() == 1);
 
         // TODO complete the test
+        // transfert 800 from account #1 to account #2, pas de changement car montant superieur à la balance
+        boolean t = m.transfer(1, 2, 800.0);
+        check("transfert-5", t);
+        check("transfert-6", m.getBalance(1) == 750.0);
+        check("transfert-7", m.getBalance(2) == 250.0);
+        
+        // transfert 800 from account #1 to account #2, pas de changement car montant superieur à la balance
+        boolean u = m.transfer(1, 1, 250.0);
+        check("transfert-8", t);
+        check("transfert-9", m.getBalance(1) == 750.0);
     }
 
     //
