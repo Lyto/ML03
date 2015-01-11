@@ -88,23 +88,12 @@ public class BankManagerImpl implements BankManager {
         String BEFORE_INSERT_ACCOUNT_TRIGGER = "CREATE TRIGGER BEFORE_INSERT_ACCOUNT_TRIG BEFORE INSERT ON account FOR EACH ROW BEGIN IF(EXISTS(SELECT * FROM account WHERE AID=NEW.AID)) THEN INSERT INTO account(AID, BALANCE) VALUES(NEW.AID, NEW.BALANCE); END IF; END;";
         stmt.executeUpdate(BEFORE_INSERT_ACCOUNT_TRIGGER);
           */ 
-        System.out.println(sqlDate);
   
         String DROP_ACCOUNT_AFTER_UPDATE_TRIGGER ="DROP TRIGGER IF EXISTS ACCOUNT_AFTER_UPDATE_TRIGGER;";
         stmt.executeUpdate(DROP_ACCOUNT_AFTER_UPDATE_TRIGGER);
         String ACCOUNT_AFTER_UPDATE_TRIGGER = "CREATE TRIGGER ACCOUNT_AFTER_UPDATE_TRIGGER AFTER UPDATE ON account FOR EACH ROW BEGIN INSERT INTO OPERATION(AID, AMOUNT, DATE) VALUES(NEW.AID,NEW.BALANCE-OLD.BALANCE,now()); END;";
         stmt.executeUpdate(ACCOUNT_AFTER_UPDATE_TRIGGER);
-        
-=======
-         String DROP_BEFORE_INSERT_ACCOUNT_TRIGGER ="DROP TRIGGER IF EXISTS BEFORE_INSERT_ACCOUNT_TRIG;";
-         stmt.executeUpdate(DROP_BEFORE_INSERT_ACCOUNT_TRIGGER);
-         String BEFORE_INSERT_ACCOUNT_TRIGGER = "CREATE TRIGGER BEFORE_INSERT_ACCOUNT_TRIG BEFORE INSERT ON account FOR EACH ROW BEGIN IF(EXISTS(SELECT * FROM account WHERE AID=NEW.AID)) THEN INSERT INTO account(AID, BALANCE) VALUES(NEW.AID, NEW.BALANCE); END IF; END;";
-         stmt.executeUpdate(BEFORE_INSERT_ACCOUNT_TRIGGER);
-         *
-         String ACCOUNT_AFTER_UPDATE_TRIGGER = "CREATE TRIGGER ACCOUNT_AFTER_UPDATE_TRIGGER AFTER UPDATE ON account FOR EACH ROW BEGIN  END;";
-         stmt.executeUpdate(ACCOUNT_AFTER_UPDATE_TRIGGER);
-         */
->>>>>>> origin/master
+
     }
 
     @Override
@@ -155,13 +144,12 @@ public class BankManagerImpl implements BankManager {
     public double addBalance(int number, double amount) throws SQLException {
 
         String updateString = "UPDATE ACCOUNT SET BALANCE = BALANCE +" + amount + " WHERE AID=" + number + ";";
-<<<<<<< HEAD
-        
+
         // Effectuer la mise à jour du compte
         stmt.executeUpdate(updateString);
-=======
+
         Date date = new Date(System.currentTimeMillis());
->>>>>>> origin/master
+
 
         try {
             conn.setAutoCommit(false);
@@ -182,18 +170,7 @@ public class BankManagerImpl implements BankManager {
                 numberOp = res.getInt("countOp");
             }
 
-            String insertString = "INSERT INTO OPERATION values (?,?,?);";
-            System.out.println(insertString);
-            java.util.Date utilDate = new java.util.Date();
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-            PreparedStmt = conn.prepareStatement(insertString);
-            //PreparedStmt.setInt(1, numberOp + 1);
-            PreparedStmt.setInt(1, number);
-            PreparedStmt.setDouble(2, amount);
-            PreparedStmt.setDate(3, sqlDate);
-            PreparedStmt.executeUpdate();
 
-<<<<<<< HEAD
   /*      String insertString = "INSERT INTO OPERATION values (?,?,?);";
         System.out.println(insertString);
         PreparedStmt = conn.prepareStatement(insertString);
@@ -203,13 +180,13 @@ public class BankManagerImpl implements BankManager {
         PreparedStmt.setDate(3, sqlDate);
         PreparedStmt.executeUpdate();
 */
-=======
+
             conn.commit();
         } catch (SQLException e) {
             conn.rollback();
         }
 
->>>>>>> origin/master
+
         return amount;
     }
 
