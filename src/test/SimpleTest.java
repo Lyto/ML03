@@ -109,7 +109,7 @@ public class SimpleTest {
 
 	    // create the database
 	    manager.createDB();
-/*	    
+	    
 	    // populate the database
 	    for (int i = 0; i < MAX_ACCOUNTS; i++) {
 		manager.createAccount(i + 1);
@@ -117,7 +117,7 @@ public class SimpleTest {
 
 	    // execute single-user tests
 	    singleUserTests(manager, "single-customer");
-
+/*
 	    // execute multi-user tests
 	    for (int i = 0; i < MAX_CUSTOMERS; i++) {
 		BankManager m = new BankManagerImpl(args[0], args[1], args[2]);
