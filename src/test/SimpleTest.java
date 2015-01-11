@@ -149,6 +149,19 @@ public class SimpleTest {
         boolean u = m.transfer(1, 1, 250.0);
         check("transfert-8", t);
         check("transfert-9", m.getBalance(1) == 750.0);
+        
+        // deposit 100 on account #3
+        b = m.addBalance(3, 100.0);
+        check("addBalance", b == 100.0);
+        
+        // deposit 770 on account #9
+        b = m.addBalance(9, 770.0);
+        check("addBalance", b == 770.0);
+        
+        // transfert 498 from account #9 to account #3
+        s = m.transfer(9, 3, 498.0);
+        check("transfert2", s);
+
     }
 
     //
