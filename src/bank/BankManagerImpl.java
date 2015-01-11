@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,12 +62,13 @@ public class BankManagerImpl implements BankManager {
         
         stmt.executeUpdate(CREATE_TABLE_ACCOUNT);
         
+        String DELETE_CONTENT = "DELETE FROM `account` WHERE AID!=0";
+        stmt.executeUpdate(DELETE_CONTENT);
+        
         String CREATE_TABLE_OPERATION = "create table IF NOT EXISTS OPERATION (" + 
-	    "OID int, " + 
             "AID int, " +
             "AMOUNT double, " +
             "DATE date, " +
-	    "primary key (OID)," + 
             "foreign key(AID) REFERENCES ACCOUNT(AID) ON DELETE CASCADE"+
 	    ")";
         
@@ -86,7 +88,10 @@ public class BankManagerImpl implements BankManager {
         stmt.executeUpdate(DROP_BEFORE_INSERT_ACCOUNT_TRIGGER);
         String BEFORE_INSERT_ACCOUNT_TRIGGER = "CREATE TRIGGER BEFORE_INSERT_ACCOUNT_TRIG BEFORE INSERT ON account FOR EACH ROW BEGIN IF(EXISTS(SELECT * FROM account WHERE AID=NEW.AID)) THEN INSERT INTO account(AID, BALANCE) VALUES(NEW.AID, NEW.BALANCE); END IF; END;";
         stmt.executeUpdate(BEFORE_INSERT_ACCOUNT_TRIGGER);
-           */ 
+           *
+        String ACCOUNT_AFTER_UPDATE_TRIGGER = "CREATE TRIGGER ACCOUNT_AFTER_UPDATE_TRIGGER AFTER UPDATE ON account FOR EACH ROW BEGIN  END;";
+        stmt.executeUpdate(ACCOUNT_AFTER_UPDATE_TRIGGER);
+        */
     }
 
     @Override
@@ -134,7 +139,7 @@ public class BankManagerImpl implements BankManager {
         stmt.executeUpdate(updateString);
 
         /*
-         Renseigner l'opération effectuée
+        Renseigner l'opération effectuée
          */
         String nbOp = "SELECT COUNT(*) as countOp FROM OPERATION";
         int numberOp = 0;
@@ -148,14 +153,13 @@ public class BankManagerImpl implements BankManager {
 
         String insertString = "INSERT INTO OPERATION values (?,?,?);";
         System.out.println(insertString);
-
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
         PreparedStmt = conn.prepareStatement(insertString);
-
-        PreparedStmt.setInt(1, numberOp + 1);
-        PreparedStmt.setInt(2, number);
-        PreparedStmt.setDouble(3, amount);
-        //PreparedStmt.setDate(4, (java.sql.Date) date);
-
+        //PreparedStmt.setInt(1, numberOp + 1);
+        PreparedStmt.setInt(1, number);
+        PreparedStmt.setDouble(2, amount);
+        PreparedStmt.setDate(3, sqlDate);
         PreparedStmt.executeUpdate();
 
         return amount;
@@ -180,7 +184,7 @@ public class BankManagerImpl implements BankManager {
 
         // Commiter si succès de l'opération
         if (success == true) {
-
+        
         }
 
         return success;
@@ -196,7 +200,7 @@ public class BankManagerImpl implements BankManager {
 
         // tant qu'il reste une ligne 
         while (res.next()) {
-            Operation operation = new Operation(res.getInt("number"),
+            Operation operation = new Operation(res.getInt("AID"),
                     res.getDouble("amount"), res.getDate("date"));
             operations.add(operation);
         }
