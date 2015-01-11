@@ -81,13 +81,7 @@ public class BankManagerImpl implements BankManager {
         stmt.executeUpdate(DROP_ACCOUNT_UPDATE_TRIGGER);
         String ACCOUNT_UPDATE_TRIGGER = "CREATE TRIGGER ACCOUNT_UPDATE_TRIG BEFORE UPDATE ON account FOR EACH ROW BEGIN IF(NEW.BALANCE<0) THEN SET NEW.BALANCE=OLD.BALANCE; SIGNAL sqlstate '45001' set message_text = \"No way ! You cannot do this !\"; END IF; END;";
         stmt.executeUpdate(ACCOUNT_UPDATE_TRIGGER);
-        /*
-<<<<<<< HEAD
-        String DROP_BEFORE_INSERT_ACCOUNT_TRIGGER ="DROP TRIGGER IF EXISTS BEFORE_INSERT_ACCOUNT_TRIG;";
-        stmt.executeUpdate(DROP_BEFORE_INSERT_ACCOUNT_TRIGGER);
-        String BEFORE_INSERT_ACCOUNT_TRIGGER = "CREATE TRIGGER BEFORE_INSERT_ACCOUNT_TRIG BEFORE INSERT ON account FOR EACH ROW BEGIN IF(EXISTS(SELECT * FROM account WHERE AID=NEW.AID)) THEN INSERT INTO account(AID, BALANCE) VALUES(NEW.AID, NEW.BALANCE); END IF; END;";
-        stmt.executeUpdate(BEFORE_INSERT_ACCOUNT_TRIGGER);
-          */ 
+
   
         String DROP_ACCOUNT_AFTER_UPDATE_TRIGGER ="DROP TRIGGER IF EXISTS ACCOUNT_AFTER_UPDATE_TRIGGER;";
         stmt.executeUpdate(DROP_ACCOUNT_AFTER_UPDATE_TRIGGER);
@@ -154,29 +148,6 @@ public class BankManagerImpl implements BankManager {
 
             // Effectuer la mise à jour du compte
             stmt.executeUpdate(updateString);
-/*
-             Renseigner l'opération effectuée
-             
-            String nbOp = "SELECT COUNT(*) as countOp FROM OPERATION";
-            int numberOp = 0;
-
-            // récupération du résultat de la requête
-            res = stmt.executeQuery(nbOp);
-
-            while (res.next()) {
-                numberOp = res.getInt("countOp");
-            }
-
-
-        String insertString = "INSERT INTO OPERATION values (?,?,?);";
-        System.out.println(insertString);
-        PreparedStmt = conn.prepareStatement(insertString);
-        //PreparedStmt.setInt(1, numberOp + 1);
-        PreparedStmt.setInt(1, number);
-        PreparedStmt.setDouble(2, amount);
-        PreparedStmt.setDate(3, sqlDate);
-        PreparedStmt.executeUpdate();
-*/
 
             conn.commit();
         } catch (SQLException e) {
