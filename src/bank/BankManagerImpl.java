@@ -149,15 +149,12 @@ public class BankManagerImpl implements BankManager {
         //stmt.executeUpdate(updateString);
 
         //Date date = new Date(System.currentTimeMillis());
-
-
         try {
             conn.setAutoCommit(false);
 
             // Effectuer la mise à jour du compte
             stmt.executeUpdate(updateString);
 /*
-            
              Renseigner l'opération effectuée
              
             String nbOp = "SELECT COUNT(*) as countOp FROM OPERATION";
@@ -216,7 +213,7 @@ public class BankManagerImpl implements BankManager {
     @Override
     public List<Operation> getOperations(int number, Date from, Date to) throws SQLException {
         // récupération de l'ordre de la requete
-        res = stmt.executeQuery("SELECT * FROM OPERATION");
+        res = stmt.executeQuery("SELECT * FROM OPERATION WHERE AID=" + number +"");
 
         // creation d'une List d'opérations
         List<Operation> operations = new ArrayList<Operation>();
