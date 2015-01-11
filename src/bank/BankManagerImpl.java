@@ -146,9 +146,9 @@ public class BankManagerImpl implements BankManager {
         String updateString = "UPDATE ACCOUNT SET BALANCE = BALANCE +" + amount + " WHERE AID=" + number + ";";
 
         // Effectuer la mise à jour du compte
-        stmt.executeUpdate(updateString);
+        //stmt.executeUpdate(updateString);
 
-        Date date = new Date(System.currentTimeMillis());
+        //Date date = new Date(System.currentTimeMillis());
 
 
         try {
@@ -156,10 +156,10 @@ public class BankManagerImpl implements BankManager {
 
             // Effectuer la mise à jour du compte
             stmt.executeUpdate(updateString);
-
-            /*
+/*
+            
              Renseigner l'opération effectuée
-             */
+             
             String nbOp = "SELECT COUNT(*) as countOp FROM OPERATION";
             int numberOp = 0;
 
@@ -171,7 +171,7 @@ public class BankManagerImpl implements BankManager {
             }
 
 
-  /*      String insertString = "INSERT INTO OPERATION values (?,?,?);";
+        String insertString = "INSERT INTO OPERATION values (?,?,?);";
         System.out.println(insertString);
         PreparedStmt = conn.prepareStatement(insertString);
         //PreparedStmt.setInt(1, numberOp + 1);
@@ -207,7 +207,7 @@ public class BankManagerImpl implements BankManager {
 
             conn.commit();
         } catch (SQLException e) {
-            conn.rollback();
+            //conn.rollback();
         }
 
         return success;
