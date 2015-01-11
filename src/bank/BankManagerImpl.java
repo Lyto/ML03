@@ -2,6 +2,7 @@ package bank;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,6 +30,7 @@ public class BankManagerImpl implements BankManager {
     private Connection conn;
     private Statement stmt;
     private ResultSet res;
+    private PreparedStatement PreparedStmt;
 
     /**
      * Creates a new ReservationManager object. This creates a new connection to
@@ -89,32 +91,116 @@ public class BankManagerImpl implements BankManager {
 
     @Override
     public boolean createAccount(int number) throws SQLException {
-	// TODO Auto-generated method stub
-	return false;
+
+        String insertString = "INSERT INTO ACCOUNT values (?,?);";
+
+        try {
+            PreparedStmt = conn.prepareStatement(insertString);
+
+            PreparedStmt.setInt(1, number);
+            PreparedStmt.setDouble(2, 0);
+
+            PreparedStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public double getBalance(int number) throws SQLException {
-	// TODO Auto-generated method stub
-	return 0;
+
+        String selectString = "SELECT BALANCE FROM ACCOUNT where AID=" + number + ";";
+        Double balance = null;
+
+        // récupération du résultat de la requête
+        res = stmt.executeQuery(selectString);
+
+        while (res.next()) {
+            balance = res.getDouble("BALANCE");
+        }
+
+        return balance;
     }
 
     @Override
     public double addBalance(int number, double amount) throws SQLException {
-	// TODO Auto-generated method stub
-	return 0;
+
+        String updateString = "UPDATE ACCOUNT SET BALANCE = BALANCE +" + amount + " WHERE AID=" + number + ";";
+        Date date = new Date(System.currentTimeMillis());
+        // Effectuer la mise à jour du compte
+        stmt.executeUpdate(updateString);
+
+        /*
+         Renseigner l'opération effectuée
+         */
+        String nbOp = "SELECT COUNT(*) as countOp FROM OPERATION";
+        int numberOp = 0;
+
+        // récupération du résultat de la requête
+        res = stmt.executeQuery(nbOp);
+
+        while (res.next()) {
+            numberOp = res.getInt("countOp");
+        }
+
+        String insertString = "INSERT INTO OPERATION values (?,?,?);";
+        System.out.println(insertString);
+
+        PreparedStmt = conn.prepareStatement(insertString);
+
+        PreparedStmt.setInt(1, numberOp + 1);
+        PreparedStmt.setInt(2, number);
+        PreparedStmt.setDouble(3, amount);
+        //PreparedStmt.setDate(4, (java.sql.Date) date);
+
+        PreparedStmt.executeUpdate();
+
+        return amount;
     }
 
     @Override
     public boolean transfer(int from, int to, double amount) throws SQLException {
-	// TODO Auto-generated method stub
-	return false;
+
+        boolean success = true; // évalue le succès du transfert 
+
+        // Effectuer la mise à jour compte débiteur
+        String updateAccount1 = "UPDATE ACCOUNT SET BALANCE = BALANCE - " + amount + " WHERE AID=" + from + ";";
+        if (stmt.executeUpdate(updateAccount1) == 0) {
+            success = false;
+        }
+
+        // Effectuer la mise à jour compte bénéficiaire
+        String updateAccount2 = "UPDATE ACCOUNT SET BALANCE = BALANCE + " + amount + " WHERE AID=" + to + ";";
+        if (stmt.executeUpdate(updateAccount2) == 0) {
+            success = false;
+        }
+
+        // Commiter si succès de l'opération
+        if (success == true) {
+
+        }
+
+        return success;
     }
 
     @Override
     public List<Operation> getOperations(int number, Date from, Date to) throws SQLException {
-	// TODO Auto-generated method stub
-	return null;
-    }
+        // récupération de l'ordre de la requete
+        res = stmt.executeQuery("SELECT * FROM OPERATION");
 
+        // creation d'une List d'opérations
+        List<Operation> operations = new ArrayList<Operation>();
+
+        // tant qu'il reste une ligne 
+        while (res.next()) {
+            Operation operation = new Operation(res.getInt("number"),
+                    res.getDouble("amount"), res.getDate("date"));
+            operations.add(operation);
+        }
+        // Retourner l'ArrayList
+        return operations;
+    }
 }
