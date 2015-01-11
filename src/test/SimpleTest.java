@@ -109,7 +109,7 @@ public class SimpleTest {
 
 	    // create the database
 	    manager.createDB();
-/*	    
+            
 	    // populate the database
 	    for (int i = 0; i < MAX_ACCOUNTS; i++) {
 		manager.createAccount(i + 1);
@@ -123,7 +123,7 @@ public class SimpleTest {
 		BankManager m = new BankManagerImpl(args[0], args[1], args[2]);
 		new CustomerEmulator(m, "multi-customer" + i).start();
 	    }
-*/
+
 	} catch (Exception e) {
 	    System.err.println("test aborted: " + e);
 	    e.printStackTrace();
